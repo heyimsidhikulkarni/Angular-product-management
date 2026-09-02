@@ -4,15 +4,22 @@ import { Observable } from 'rxjs';
 import { Product } from '../model/product';
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class Productservice {
-  private showProductUrl='http://localhost:8080/product/showallproducts';
 
-  constructor(private http:HttpClient) {}
+  showProductUrl = 'http://localhost:8080/products/showallproducts';
+  addProductUrl = 'http://localhost:8080/products/addproduct';
 
-  showAllProducts():Observable<Product[]>{
+  constructor(private http: HttpClient) {}
+
+  getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.showProductUrl);
   }
 
+  addProduct(product: Product): Observable<string> {
+    return this.http.post(this.addProductUrl, product, {
+      responseType: 'text'
+    });
+  }
 }

@@ -41,16 +41,19 @@
             <th>Price</th>
           </tr>
         </thead>
-       <tbody>
-  <tr *ngFor="let p of products">
-    <td>#{{ p.id }}</td>
-    <td><strong>{{ p.name }}</strong></td>
-    <td>${{ p.price }}</td>
-  </tr>
-  <tr *ngIf="products.length === 0">
-    <td colspan="3" class="empty-state">No products found. Add one on the left!</td>
-  </tr>
-</tbody>
+        <tbody>
+          @for (p of products(); track p.id) {
+            <tr>
+              <td>#{{ p.id }}</td>
+              <td><strong>{{ p.name }}</strong></td>
+              <td>${{ p.price }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="3" class="empty-state">No products found. Add one on the left!</td>
+            </tr>
+          }
+        </tbody>
       </table>
     </div>
   </div>

@@ -1,17 +1,46 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { Product } from '../../model/product';
+import { Productservice } from '../../services/productservice';
+import { FormsModule } from '@angular/forms';
 
 @Component({
+  imports: [FormsModule],
   selector: 'app-productcomponent',
-  imports: [],
-  templateUrl: './productcomponent.html',
   styleUrl: './productcomponent.css',
+  templateUrl: './productcomponent.html',
 })
-export class Productcomponent {
-  products:Product[]=[];  
+export class productcomponent implements OnInit {
+
   newProduct:Product={
-    name:'',
-    price:0
+    price:0,
+    name:''
   }
-  
+
+  products=signal<Product[]>([])
+
+  constructor(private productService:Productservice){}
+
+  ngOnInit(): void {
+    this.loadProducts();
+  }
+
+  loadProducts(){
+    this.productService.getProducts().subscribe({
+      next:(serviceResponse)=>{
+        this.products.set(serviceResponse)
+      },
+      error:(serviceResponse)=>console.log('product list could not be loaded',serviceResponse)
+    })
+  }
+
+  onSubmit(){
+    this.productService.addProduct(this.newProduct).subscribe({
+      next:(serviceResponse)=>{
+        this.loadProducts();
+        this.newProduct={name:'',price:0}
+      },
+      error:(serviceResponse)=>console.log('could not load product',serviceResponse)
+    })
+  }
+
 }
